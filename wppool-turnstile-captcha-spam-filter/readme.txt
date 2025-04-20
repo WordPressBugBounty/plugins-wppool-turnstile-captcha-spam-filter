@@ -1,10 +1,10 @@
 === Easy Cloudflare Turnstile - Privacy friendly reCAPTCHA alternative for WordPress, Contact Form 7, WPForms, BuddyPress, Elementor ===
-Contributors: wppool, mahfuz01, azizultex, wpdarkmode, devsajjad, farhanmullick
+Contributors: wppool, mahfuz01, azizultex, wpdarkmode, devsajjad, farhanmullick, shahreyar46
 Tags: turnstile, captcha, anti-spam, recaptcha, cloudflare
 Requires at least: 5.4
-Tested up to: 6.5
+Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 2.3.8
+Stable tag: 2.3.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ For step-by-step instructions, check our tutorial.
 https://youtu.be/2jU2LhkiQQU
 
 == Changelog ==
+
+= 2.3.9 – 20 Apr 2025 =
+* **Fix:** Enhanced compatibility to support WordPress 6.8
 
 = 2.3.8 - 04 Apr 2024 =
 * Improvement: Enhanced compatibility to support WordPress 6.5

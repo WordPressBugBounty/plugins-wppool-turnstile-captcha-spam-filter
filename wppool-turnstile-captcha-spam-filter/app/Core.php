@@ -199,7 +199,7 @@ namespace EasyCloudflareTurnstile {
 			$this->includes();
 			$this->loader();
 			$this->activation();
-			$this->appsero_init();
+			add_action( 'init', [ $this, 'appsero_init' ] );
 			$this->wppool_sdk();
 		}
 
