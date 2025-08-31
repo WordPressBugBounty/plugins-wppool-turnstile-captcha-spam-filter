@@ -38,8 +38,8 @@ class Admin {
 	{
 
 			add_menu_page(
-				__( 'Easy Cloudflare Turnstile', 'wppool-turnstile' ),
-				__( 'Easy Cloudflare Turnstile', 'wppool-turnstile' ),
+				__( 'Easy Spam Filter', 'wppool-turnstile' ),
+				__( 'Easy Spam Filter', 'wppool-turnstile' ),
 				'manage_options',
 				'easy-cloudflare-turnstile-settings',
 				[ $this, 'display_admin_page' ],

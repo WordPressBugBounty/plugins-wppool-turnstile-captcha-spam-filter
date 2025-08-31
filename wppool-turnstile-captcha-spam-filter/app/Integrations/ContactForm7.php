@@ -247,7 +247,7 @@ class ContactForm7 {
 
 		$tag_generator->add(
 			'easy_cloudflare_turnstile',
-			__( 'easy cloudflare turnstile', 'wppool-turnstile' ),
+			__( 'easy  spam filter', 'wppool-turnstile' ),
 			[ $this, 'button' ],
 			''
 		);

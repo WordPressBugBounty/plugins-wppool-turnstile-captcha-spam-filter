@@ -289,7 +289,7 @@ namespace EasyCloudflareTurnstile {
 		{
 			$client = new \Appsero\Client(
 				'f5f9ad3d-60f6-41e0-8ab5-fc7ffbf36ec0',
-				__( 'Easy Cloudflare Turnstile', 'wppool-turnstile' ),
+				__( 'Easy Spam Filter', 'wppool-turnstile' ),
 				EASY_CLOUDFLARE_TURNSTILE_FILE
 			);
 

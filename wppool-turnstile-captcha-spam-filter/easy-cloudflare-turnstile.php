@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name:       Easy Cloudflare Turnstile
+ * Plugin Name:       Easy Spam Filter
  * Plugin URI:        https://wppool.dev/spam-filter-with-turnstile-captcha
- * Description:       Cloudflare Turnstile CAPTCHA spam filter for WordPress, WooCommerce, Contact Form 7, BuddyPress, and more.
- * Version:           2.3.9
+ * Description:       Easy Spam Filter for WordPress, WooCommerce, Contact Form 7, BuddyPress, and more.
+ * Version:           2.3.10
  * Requires at least: 5.4
  * Requires PHP:      5.6
  * Author:            WPPOOL

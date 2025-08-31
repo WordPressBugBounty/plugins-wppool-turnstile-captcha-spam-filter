@@ -1,25 +1,27 @@
-=== Easy Cloudflare Turnstile - Privacy friendly reCAPTCHA alternative for WordPress, Contact Form 7, WPForms, BuddyPress, Elementor ===
+=== Easy Spam Filter - Privacy-Friendly CAPTCHA Alternative with Turnstile for Contact Form 7, WPForms, BuddyPress, Elementor ===
 Contributors: wppool, mahfuz01, azizultex, wpdarkmode, devsajjad, farhanmullick, shahreyar46
 Tags: turnstile, captcha, anti-spam, recaptcha, cloudflare
 Requires at least: 5.4
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 2.3.9
+Stable tag: 2.3.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add Cloudflare Turnstile to WordPress, Contact Form 7, WooCommerce, WPForms, BuddyPress & Elementor. A 100% FREE reCAPTCHA alternative for WordPress.
+Add Cloudflare Turnstile to WordPress, Contact Form 7, WooCommerce, WPForms, BuddyPress & Elementor. A CAPTCHA, reCAPTCHA alternative for WordPress.
 
 == Description == 
 
-**Cloudflare Turnstile for WordPress, WooCommerce, Contact Form 7, BuddyPress, WPForms, and more. Secure your WordPress website with the best reCAPTCHA alternative for WordPress.**
+Cloudflare Turnstile for WordPress, WooCommerce, Contact Form 7, BuddyPress, WPForms, and more. Secure your WordPress website with the best reCAPTCHA alternative for WordPress.
 
-> **"Studies show that 15% of users will abandon a web-based service when they face a traditional CAPTCHA test."**
+**"Studies show that 15% of users will abandon a web-based service when they face a traditional CAPTCHA test."**
 
-## HOW TO ADD CLOUDFLARE TURNSTILE IN WORDPRESS
+**HOW TO ADD CLOUDFLARE TURNSTILE IN WORDPRESS**
+
 https://youtu.be/2jU2LhkiQQU
 
-## PROTECTS AGAINST SPAM FOR: ##
+**PROTECTS AGAINST SPAM FOR:**
+
 * **WordPress Login form**
 * **WordPress Signup form**
 * **WordPress Reset Password form**
@@ -37,20 +39,18 @@ Say to no user experience nightmare, known as CAPTCHA. It hinders your website e
 
 **WHAT IS CLOUDFLARE TURNSTILE, AND HOW TO ACTIVATE IT ON YOUR WEBSITE?**
 
-Turnstile is the latest privacy-focused invisible CAPTCHA technology developed by Cloudflare to create a modern alternative to CAPTCHA. 
+Turnstile is the latest privacy-focused invisible CAPTCHA technology developed by Cloudflare to create a modern CAPTCHA alternative and reCAPTCHA alternative.
 
-**Turnstile helps you identify real website visitors without needing additional actions.** Instead, Turnstile automatically runs a series of small non-interactive JavaScript challenges based on telemetry and client behavior displayed during a session. That means the possibility of your users facing CAPTCHA will reduce significantly.
-
-> *Learn more about Cloudflare Turnstile: [https://www.cloudflare.com/en-gb/products/turnstile/](https://www.cloudflare.com/en-gb/products/turnstile/)*
+**Turnstile helps you identify real website visitors without needing additional actions.** Instead, Turnstile automatically runs a series of small non-interactive JavaScript challenges based on telemetry and client behavior displayed during a session. That means the possibility of your users facing CAPTCHA will reduce significantly. [Learn more about Turnstile](https://www.cloudflare.com/en-gb/products/turnstile/)
 
 
-**Getting started with Turnstile on WordPress is super easy.** All you have to do is install and activate our plugin. Then, generate your site and secret keys from Cloudflare (a free and easy process) and input them through the provided field. That's it. The plugin does everything else. Cloudflare Turnstile will be ready to protect your forms from spam. You will no longer have to get frustrated with the poor efficacy of reCAPTCHA ever again!
+**Getting started with Turnstile on WordPress is super easy.** All you have to do is install and activate our plugin. Then, generate your site and secret keys from Cloudflare (a free and easy process) and input them through the provided field. That's it. The plugin does everything else and ready to protect your forms from spam. You will no longer have to get frustrated with the poor efficacy of reCAPTCHA ever again!
 
 [👩🏼‍💻 Get support](https://wordpress.org/support/plugin/wppool-turnstile-captcha-spam-filter/)
 
-## EASY CLOUDFLARE TURNSTILE FEATURES ##
+== EASY SPAM FILTER FEATURES ==
 
-1. **Automatic deployment:** Once you setup Easy Cloudflare Turnstile with your site key and secret key, the plugin does the rest. It will automatically deploy the required HTML snippet in your website for you.
+1. **Automatic deployment:** Once you setup Easy Spam Filter with your site key and secret key, the plugin does the rest. It will automatically deploy the required HTML snippet in your website for you.
 2. **WordPress spam protection:** Spam Filter with Turnstile safeguards your website against spam comments or brute force attacks. It has support for every kind of WordPress form, including
    - Signup/registration form spam protection
    - Login form spam protection
@@ -64,7 +64,7 @@ Turnstile is the latest privacy-focused invisible CAPTCHA technology developed b
    - Login form - my account spam protection
    - Lost/Reset password form spam protection
    - Checkout billing form spam protection
-7. **Contact Form 7 spam protection:** Experience flawless Turnstile integration for Contact Form 7 forms. Protect your CF7 forms from spam comments. After configuration, add `[easy_cloudflare_turnstile]` to any Contact Form 7 form.
+7. **Contact Form 7 spam protection:** Experience flawless Turnstile integration for Contact Form 7 forms. Protect your CF7 forms from spam comments. After configuration, add Turnstile to any Contact Form 7 form.
 8. **BuddyPress login spam protection:** Keep your BuddyPress groups safe with secured spam protection by Cloudflare Turnstile antispam filter.
 9. **WPForms spam protection:** Add Cloudflare Turnstile in Contact Form by WPForms and keep your everyday contact forms safe from spam submissions. Activate and enjoy
    - Contact forms spam protection
@@ -81,8 +81,8 @@ Turnstile is the latest privacy-focused invisible CAPTCHA technology developed b
 13. **Custom message:** Customize the Turnstile widget message and replace the default one (“Please verify you are human”).
 
 
-## Privacy Policy 
-Easy Cloudflare Turnstile uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
+== Privacy Policy ==
+Easy Spam Filter uses [Appsero](https://appsero.com) SDK to collect some telemetry data upon user's confirmation. This helps us to troubleshoot problems faster & make product improvements.
 
 Appsero SDK **does not gather any data by default.** The SDK only starts gathering basic telemetry data **when a user allows it via the admin notice**. We collect the data to ensure a great user experience for all our users. 
 
@@ -102,7 +102,25 @@ For step-by-step instructions, check our tutorial.
 
 https://youtu.be/2jU2LhkiQQU
 
+== Frequently Asked Questions ==
+
+= How to Add Cloudflare Turnstile CAPTCHA in WordPress? =
+First, install and activate Easy Spam Filter from WP Admin Dashboard>Plugins. Then, get your site key and a secret key from Cloudflare and insert them through settings to get started.
+
+= Is Easy Spam Filter plugin compatible with all modern browsers? =
+Yes, you can use this plugin in all modern browsers (Safari, Chrome, Firefox, Edge, etc.) without any issue.
+
+= Do I need to know any programming language to use this plugin?
+No. Easy Spam Filter is an easy-to-use plugin that you can use without any programming knowledge.
+
+= Whom do I contact for any Support? 
+For instant support, please reach us through [WordPress Support Forum]((https://wordpress.org/support/plugin/wppool-turnstile-captcha-spam-filter/)).
+
+
 == Changelog ==
+
+= 2.3.10 – 31 Aug 2025 =
+* **Improvement:** Enhanced compatibility and maintenance update
 
 = 2.3.9 – 20 Apr 2025 =
 * **Fix:** Enhanced compatibility to support WordPress 6.8
@@ -229,17 +247,3 @@ https://youtu.be/2jU2LhkiQQU
 
 = 1.0.0 =
 * Initial release
-
-== Frequently Asked Questions ==
-
-= How to Add Cloudflare Turnstile CAPTCHA in WordPress? =
-First, install and activate Easy Cloudflare Turnstile from WP Admin Dashboard>Plugins. Then, get your site key and a secret key from Cloudflare and insert them through settings to get started.
-
-= Is Easy Cloudflare Turnstile plugin compatible with all modern browsers? =
-Yes, you can use this plugin in all modern browsers (Safari, Chrome, Firefox, Edge, etc.) without any issue.
-
-= Do I need to know any programming language to use this plugin?
-No. Easy Cloudflare Turnstile is an easy-to-use plugin that you can use without any programming knowledge.
-
-= Whom do I contact for any Support? 
-For instant support, please reach us through [WordPress Support Forum]((https://wordpress.org/support/plugin/wppool-turnstile-captcha-spam-filter/)).

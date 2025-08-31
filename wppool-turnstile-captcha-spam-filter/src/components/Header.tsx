@@ -13,7 +13,7 @@ const Header: FC<Props> = ({ validation }) => {
       <Row>
         <Column xs="12" textSm="left" sm="10">
           <div className="header-content">
-            <h1>Easy Cloudflare Turnstile</h1>
+            <h1>Easy Spam Filter</h1>
             {!validation && (
               <p>Your website is not connected to Cloudflare Turnstile</p>
             )}
