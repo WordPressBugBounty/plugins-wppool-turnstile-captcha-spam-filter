@@ -38,8 +38,8 @@ class Admin {
 	{
 
 			add_menu_page(
-				__( 'Easy Spam Filter', 'wppool-turnstile' ),
-				__( 'Easy Spam Filter', 'wppool-turnstile' ),
+				__( 'Easy Spam Filter', 'wppool-turnstile-captcha-spam-filter' ),
+				__( 'Easy Spam Filter', 'wppool-turnstile-captcha-spam-filter' ),
 				'manage_options',
 				'easy-cloudflare-turnstile-settings',
 				[ $this, 'display_admin_page' ],
@@ -48,8 +48,8 @@ class Admin {
 
 				add_submenu_page(
 					'easy-cloudflare-turnstile-settings',
-					__( 'Settings', 'wppool-turnstile' ),
-					__( 'Settings', 'wppool-turnstile' ),
+					__( 'Settings', 'wppool-turnstile-captcha-spam-filter' ),
+					__( 'Settings', 'wppool-turnstile-captcha-spam-filter' ),
 					'manage_options',
 					'easy-cloudflare-turnstile-settings',
 					[ $this, 'display_admin_page' ]

@@ -220,7 +220,7 @@ namespace EasyCloudflareTurnstile {
 			foreach ( $dependencies as $path ) {
 				if ( ! file_exists( EASY_CLOUDFLARE_TURNSTILE_DIR . $path ) ) {
 					status_header( 500 );
-					wp_die( esc_html__( 'Plugin is missing required dependencies. Please contact support for more information.', 'wppool-turnstile' ) );
+					wp_die( esc_html__( 'Plugin is missing required dependencies. Please contact support for more information.', 'wppool-turnstile-captcha-spam-filter' ) );
 				}
 
 				require EASY_CLOUDFLARE_TURNSTILE_DIR . $path;
@@ -289,7 +289,7 @@ namespace EasyCloudflareTurnstile {
 		{
 			$client = new \Appsero\Client(
 				'f5f9ad3d-60f6-41e0-8ab5-fc7ffbf36ec0',
-				__( 'Easy Spam Filter', 'wppool-turnstile' ),
+				__( 'Easy Spam Filter', 'wppool-turnstile-captcha-spam-filter' ),
 				EASY_CLOUDFLARE_TURNSTILE_FILE
 			);
 

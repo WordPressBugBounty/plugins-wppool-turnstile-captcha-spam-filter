@@ -99,8 +99,8 @@ class Common {
 	 */
 	private function terminate_request( $msg )
 	{
-		$error               = __( 'Error', 'wppool-turnstile' );
-		$verification_failed = __( 'verification failed', 'wppool-turnstile' );
+		$error               = __( 'Error', 'wppool-turnstile-captcha-spam-filter' );
+		$verification_failed = __( 'verification failed', 'wppool-turnstile-captcha-spam-filter' );
 
 		wp_die(
 			sprintf(
@@ -324,7 +324,15 @@ class Common {
 	 */
 	public function get_connecting_ip()
 	{
-		return isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ? sanitize_text_field( $_SERVER['HTTP_CF_CONNECTING_IP'] ) : sanitize_text_field( $_SERVER['REMOTE_ADDR'] );
+		if ( isset( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
+			return sanitize_text_field( wp_unslash( $_SERVER['HTTP_CF_CONNECTING_IP'] ) );
+		}
+		
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+			return sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+		}
+		
+		return '';
 	}
 
 	/**
@@ -364,25 +372,25 @@ class Common {
 	{
 		switch ($code) {
 			case 'missing-input-secret':
-				return __( 'The secret parameter is missing.', 'wppool-turnstile' );
+				return __( 'The secret parameter is missing.', 'wppool-turnstile-captcha-spam-filter' );
 
 			case 'missing-input-response':
-				return __( 'The response parameter is missing.', 'wppool-turnstile' );
+				return __( 'The response parameter is missing.', 'wppool-turnstile-captcha-spam-filter' );
 
 			case 'invalid-input-secret':
-				return __( 'The secret parameter is invalid or malformed.', 'wppool-turnstile' );
+				return __( 'The secret parameter is invalid or malformed.', 'wppool-turnstile-captcha-spam-filter' );
 
 			case 'invalid-input-response':
-				return __( 'The response parameter is invalid or malformed.', 'wppool-turnstile' );
+				return __( 'The response parameter is invalid or malformed.', 'wppool-turnstile-captcha-spam-filter' );
 
 			case 'bad-request':
-				return __( 'The request is invalid or malformed.', 'wppool-turnstile' );
+				return __( 'The request is invalid or malformed.', 'wppool-turnstile-captcha-spam-filter' );
 
 			case 'timeout-or-duplicate':
-				return __( 'The response is no longer valid: either is too old or has been used previously.', 'wppool-turnstile' );
+				return __( 'The response is no longer valid: either is too old or has been used previously.', 'wppool-turnstile-captcha-spam-filter' );
 
 			default:
-				return __( 'Unknown error.', 'wppool-turnstile' );
+				return __( 'Unknown error.', 'wppool-turnstile-captcha-spam-filter' );
 		}
 	}
 
@@ -397,7 +405,7 @@ class Common {
 	public function verify( $input ) { 		if (!empty($_POST)) { // phpcs:ignore
 			$token     = strval( filter_input( INPUT_POST, 'cf-turnstile-response', FILTER_SANITIZE_FULL_SPECIAL_CHARS ) );
 			$response  = wp_turnstile()->helpers->validate_turnstile( $token );
-			$error_message = wp_turnstile()->settings->get( 'error_msg', __( 'Please verify you are human', 'wppool-turnstile' ) );
+			$error_message = wp_turnstile()->settings->get( 'error_msg', __( 'Please verify you are human', 'wppool-turnstile-captcha-spam-filter' ) );
 			return ! wp_validate_boolean( $response['success'] ) ? $this->terminate_request( esc_attr( $error_message ) ) : $input;
 	}
 	}

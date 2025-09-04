@@ -345,27 +345,27 @@ if ( ! class_exists( 'WPPOOL_Plugin' ) ) {
 												<!-- countdown  -->
 												<div class="_wppool-popup-countdown" style="display: none">
 													<span class="_wppool-popup-countdown-text">
-												<?php echo esc_html__( 'Deal Ends In', 'wp-dark-mode' ); ?>
+												<?php echo esc_html__( 'Deal Ends In', 'wppool-turnstile-captcha-spam-filter' ); ?>
 													</span>
 													<div class="_wppool-popup-countdown-time">
 														<div>
-															<span data-counter="days"><?php echo esc_html__( '00', 'wp-dark-mode' ); ?></span>
-															<span><?php echo esc_html__( 'Days', 'wp-dark-mode' ); ?></span>
+															<span data-counter="days"><?php echo esc_html__( '00', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
+															<span><?php echo esc_html__( 'Days', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
 														</div>
 														<span>:</span>
 														<div>
-															<span data-counter="hours"><?php echo esc_html__( '00', 'wp-dark-mode' ); ?></span>
-															<span><?php echo esc_html__( 'Hours', 'wp-dark-mode' ); ?></span>
+															<span data-counter="hours"><?php echo esc_html__( '00', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
+															<span><?php echo esc_html__( 'Hours', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
 														</div>
 														<span>:</span>
 														<div>
-															<span data-counter="minutes"><?php echo esc_html__( '00', 'wp-dark-mode' ); ?></span>
-															<span><?php echo esc_html__( 'Minutes', 'wp-dark-mode' ); ?></span>
+															<span data-counter="minutes"><?php echo esc_html__( '00', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
+															<span><?php echo esc_html__( 'Minutes', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
 														</div>
 														<span>:</span>
 														<div>
-															<span data-counter="seconds"><?php echo esc_html__( '00', 'wp-dark-mode' ); ?></span>
-															<span><?php echo esc_html__( 'Seconds', 'wp-dark-mode' ); ?></span>
+															<span data-counter="seconds"><?php echo esc_html__( '00', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
+															<span><?php echo esc_html__( 'Seconds', 'wppool-turnstile-captcha-spam-filter' ); ?></span>
 														</div>
 													</div>
 												</div>
@@ -375,7 +375,7 @@ if ( ! class_exists( 'WPPOOL_Plugin' ) ) {
 											<?php
 											echo esc_html__(
 												'Upgrade to Pro',
-												'wp-dark-mode'
+												'wppool-turnstile-captcha-spam-filter'
 											);
 											?>
 												</a>

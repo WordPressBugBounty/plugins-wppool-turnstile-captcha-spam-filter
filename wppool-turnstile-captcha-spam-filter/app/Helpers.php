@@ -58,12 +58,12 @@ class Helpers {
 			activate_plugin( $slug );
 
 			wp_send_json_success([
-				'message' => __( 'Plugin activated successfully', 'wppool-turnstile' ),
+				'message' => __( 'Plugin activated successfully', 'wppool-turnstile-captcha-spam-filter' ),
 			]);
 		}
 
 		wp_send_json_error([
-			'message' => __( 'Plugin could not active, error occurred.', 'wppool-turnstile' ),
+			'message' => __( 'Plugin could not active, error occurred.', 'wppool-turnstile-captcha-spam-filter' ),
 		]);
 	}
 

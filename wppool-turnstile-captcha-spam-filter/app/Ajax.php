@@ -26,7 +26,7 @@ class Ajax {
 	 */
 	public function __construct()
 	{
-		 // Store.
+		// Store.
 		add_action( 'wp_ajax_update_store', [ $this, 'update_store' ] );
 
 		// Settings.
@@ -50,15 +50,15 @@ class Ajax {
 	 */
 	public function active_plugin()
 	{
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ect_app_global_nonce' )) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ect_app_global_nonce' ) ) {
 			wp_send_json_error([
-				'message' => __( 'Invalid nonce.', 'wppool-turnstile' ),
+				'message' => __( 'Invalid nonce.', 'wppool-turnstile-captcha-spam-filter' ),
 			]);
 		}
 
 		if ( ! isset( $_POST['slug'] )) {
 			wp_send_json_error([
-				'message' => __( 'Invalid plugin to active.', 'wppool-turnstile' ),
+				'message' => __( 'Invalid plugin to active.', 'wppool-turnstile-captcha-spam-filter' ),
 			]);
 		}
 
@@ -115,15 +115,17 @@ class Ajax {
 	 * @return void
 	 */
 	public function update_store() {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ect_app_global_nonce' )) {
-			wp_send_json_error( 'Invalid nonce.' );
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ect_app_global_nonce' ) ) {
+			wp_send_json_error([
+				'message' => __( 'Invalid nonce.', 'wppool-turnstile-captcha-spam-filter' ),
+			]);
 		}
 
 		if ( ! isset( $_POST['store'] )) {
 			wp_send_json_error( 'Invalid data to save.' );
 		}
 
-		$store = wp_unslash( sanitize_text_field( $_POST['store'] ) );
+		$store = sanitize_text_field( wp_unslash( $_POST['store'] ) );
 
 		// Get the previous value of integrations from the ect_store option.
 		$prev_store = get_option( 'ect_store' );
@@ -165,26 +167,30 @@ class Ajax {
 	 */
 	public function save_settings()
 	{
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ect_app_global_nonce' )) {
-			wp_send_json_error( 'Invalid nonce.' );
-		}
-
-		$settings = ! empty( $_POST['settings'] ) && is_string( $_POST['settings'] ) ? json_decode( wp_unslash( sanitize_text_field( $_POST['settings'] ) ), true ) : [];
-
-		if (empty( $settings )) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ect_app_global_nonce' ) ) {
 			wp_send_json_error([
-				'message' => __( 'Invalid settings to save', 'wp-turnstile' ),
+				'message' => __( 'Invalid nonce.', 'wppool-turnstile-captcha-spam-filter' ),
 			]);
 		}
 
-		if (empty( $_POST['context'] ) || 'additional-settings' !== sanitize_text_field( $_POST['context'] )) {
+		// Fix 1: Apply wp_unslash() before sanitize_text_field().
+		$settings = ! empty( $_POST['settings'] ) && is_string( $_POST['settings'] ) ? json_decode( sanitize_text_field( wp_unslash( $_POST['settings'] ) ), true ) : [];
+
+		if (empty( $settings )) {
+			wp_send_json_error([
+				'message' => __( 'Invalid settings to save', 'wppool-turnstile-captcha-spam-filter' ),
+			]);
+		}
+
+		// Fix 2: Apply wp_unslash() before sanitize_text_field().
+		if (empty( $_POST['context'] ) || 'additional-settings' !== sanitize_text_field( wp_unslash( $_POST['context'] ) )) {
 			update_option( 'ect_validated', false );
 		}
 
 		wp_turnstile()->settings->save( $settings );
 
 		wp_send_json_success([
-			'message'   => __( 'Settings saved.', 'wppool-turnstile' ),
+			'message'   => __( 'Settings saved.', 'wppool-turnstile-captcha-spam-filter' ),
 			'validated' => wp_validate_boolean( get_option( 'ect_validated' ) ),
 		]);
 	}
@@ -195,16 +201,18 @@ class Ajax {
 	 * @return void
 	 */
 	public function verify_connection() {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ect_app_global_nonce' )) {
-			wp_send_json_error( 'Invalid nonce.' );
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ect_app_global_nonce' ) ) {
+			wp_send_json_error([
+				'message' => __( 'Invalid nonce.', 'wppool-turnstile-captcha-spam-filter' ),
+			]);
 		}
 
-		$secret_key = isset( $_POST['secret_key'] ) ? sanitize_text_field( $_POST['secret_key'] ) : '';
-		$token      = isset( $_POST['token'] ) ? sanitize_text_field( $_POST['token'] ) : '';
+		$secret_key = isset( $_POST['secret_key'] ) ? sanitize_text_field( wp_unslash( $_POST['secret_key'] ) ) : '';
+		$token      = isset( $_POST['token'] ) ? sanitize_text_field( wp_unslash( $_POST['token'] ) ) : '';
 
 		if (empty( $secret_key )) {
 			wp_send_json_error([
-				'message'   => __( 'Secret key is missing.', 'wppool-turnstile' ),
+				'message'   => __( 'Secret key is missing.', 'wppool-turnstile-captcha-spam-filter' ),
 				'secretKey' => 'false',
 				'token'     => false,
 			]);
@@ -212,7 +220,7 @@ class Ajax {
 
 		if (empty( $token )) {
 			wp_send_json_error([
-				'message'   => __( 'Invalid token to connect', 'wppool-turnstile' ),
+				'message'   => __( 'Invalid token to connect', 'wppool-turnstile-captcha-spam-filter' ),
 				'secretKey' => 'true',
 				'token'     => false,
 			]);
@@ -224,12 +232,12 @@ class Ajax {
 
 		if ($response['success']) {
 			wp_send_json_success([
-				'message'   => __( 'Connection verified & saved.', 'wppool-turnstile' ),
+				'message'   => __( 'Connection verified & saved.', 'wppool-turnstile-captcha-spam-filter' ),
 				'validated' => get_option( 'ect_validated' ),
 			]);
 		} else {
 			wp_send_json_error([
-				'message'   => __( 'Validation error', 'wppool-turnstile' ),
+				'message'   => __( 'Validation error', 'wppool-turnstile-captcha-spam-filter' ),
 				'validated' => get_option( 'ect_validated' ),
 			]);
 		}
@@ -241,13 +249,15 @@ class Ajax {
 	 * @return void
 	 */
 	public function ect_selected_placement() {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ect_app_global_nonce' )) {
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ect_app_global_nonce' )) {
 			wp_send_json_error([
-				'message' => __( 'Invalid nonce.', 'wppool-turnstile' ),
+				'message' => __( 'Invalid nonce.', 'wppool-turnstile-captcha-spam-filter' ),
 			]);
 		}
-		$form_name = ( isset( $_POST['form'] ) && ! empty( $_POST['form'] ) ) ? sanitize_text_field( $_POST['form'] ) : '';
-		$placements = ( isset( $_POST['selected_option'] ) && ! empty( $_POST['selected_option'] ) ) ? sanitize_text_field( $_POST['selected_option'] ) : '';
+		
+		$form_name = ( isset( $_POST['form'] ) && ! empty( $_POST['form'] ) ) ? sanitize_text_field( wp_unslash( $_POST['form'] ) ) : '';
+		$placements = ( isset( $_POST['selected_option'] ) && ! empty( $_POST['selected_option'] ) ) ? sanitize_text_field( wp_unslash( $_POST['selected_option'] ) ) : '';
+		
 		if (isset( $form_name ) && ! empty( $form_name )) {
 			$placement = str_replace( '"', '', $placements );
 			$this->form_placement( $form_name, $placement );
@@ -286,14 +296,18 @@ class Ajax {
 	 * @return string
 	 */
 	public function ect_disabled_form_ids() {
-		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'ect_app_global_nonce' )) {
+
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'ect_app_global_nonce' )) {
 			wp_send_json_error([
-				'message' => __( 'Invalid nonce.', 'wppool-turnstile' ),
+				'message' => __( 'Invalid nonce.', 'wppool-turnstile-captcha-spam-filter' ),
 			]);
 		}
 
-		$form_name = ( isset( $_POST['form'] ) && ! empty( $_POST['form'] ) ) ? sanitize_text_field( $_POST['form'] ) : '';
-		$group_ids = ( isset( $_POST['disabled_ids'] ) && ! empty( $_POST['disabled_ids'] ) ) ? sanitize_text_field( $_POST['disabled_ids'] ) : '';
+		$form_name = ( isset( $_POST['form'] ) && ! empty( $_POST['form'] ) ) ? sanitize_text_field( wp_unslash( $_POST['form'] ) ) : '';
+		$group_ids = ( isset( $_POST['disabled_ids'] ) && ! empty( $_POST['disabled_ids'] ) ) ? sanitize_text_field( wp_unslash( $_POST['disabled_ids'] ) ) : '';
+		
+		$disabled_ids = '';
+		
 		if (isset( $form_name ) && ! empty( $form_name )) {
 			$disabled_ids = preg_replace( '/\s+/', '', $group_ids );
 			$this->disabled_ids( $form_name, $disabled_ids );

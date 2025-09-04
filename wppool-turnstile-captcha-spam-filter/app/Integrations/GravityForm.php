@@ -152,6 +152,7 @@ class GravityForm {
 			return wp_kses( $this->html, $this->allowed_tags ) . $button;
 		}
 	}
+
 	/**
 	 * Enqueue turnstile challenges script on the footer.
 	 *
@@ -161,34 +162,92 @@ class GravityForm {
 	 */
 	public function enqueue_scripts( $form_id )
 	{
-		wp_register_script(
-			'ect-gvform-turnstile-challenges',
-			'//challenges.cloudflare.com/turnstile/v0/api.js?onload=ectgvformCb',
-			[],
-			wp_turnstile()->api_version,
-			true
-		);
+		// Only register and add the loader script once per page.
+		if ( ! wp_script_is( 'ect-gvform-turnstile-challenges', 'registered' ) ) {
+			wp_register_script(
+				'ect-gvform-turnstile-challenges',
+				false,
+				[],
+				wp_turnstile()->api_version,
+				true
+			);
+			
+			// Add the Turnstile loader script only once.
+			$loader_script = '(function() {
+				window.ectGravityFormsTurnstileLoader = window.ectGravityFormsTurnstileLoader || {
+					loaded: false,
+					callbacks: [],
+					
+					loadScript: function() {
+						if (this.loaded || window.turnstile) {
+							this.executeCallbacks();
+							return;
+						}
+						
+						var script = document.createElement("script");
+						script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+						script.async = true;
+						script.onload = () => {
+							this.loaded = true;
+							this.executeCallbacks();
+						};
+						document.head.appendChild(script);
+					},
+					
+					addCallback: function(callback) {
+						if (window.turnstile) {
+							callback();
+						} else {
+							this.callbacks.push(callback);
+							if (!this.loaded) this.loadScript();
+						}
+					},
+					
+					executeCallbacks: function() {
+						while (this.callbacks.length > 0) {
+							var callback = this.callbacks.shift();
+							callback();
+						}
+					}
+				};
+			})();';
+			
+			wp_add_inline_script( 'ect-gvform-turnstile-challenges', $loader_script, 'before' );
+		}
 
 		$site_key = wp_turnstile()->settings->get( 'site_key' );
-		if ($this->form_ids) {
-			$script = 'window.ectgvformCb = function () { ';
-			foreach ($this->form_ids as $form_id) {
-				$script .= "turnstile.render('#ect-gvform-turnstile-container-{$this->turnstile_context_id}-{$form_id}', {
-					sitekey: '" . esc_attr( $site_key ) . "',
-					callback: function(token) {
-                        var forms = document.querySelectorAll('.gform_wrapper input[type=submit]');
-                        forms.forEach(function(form){
-							form.style.pointerEvents = 'auto';
-							form.style.opacity = '1';
+		if ( $this->form_ids ) {
+			$context_id = esc_js( $this->turnstile_context_id );
+			$site_key_escaped = esc_js( $site_key );
+			
+			// Add form-specific rendering script.
+			$render_script = 'ectGravityFormsTurnstileLoader.addCallback(function() {';
+			
+			foreach ( $this->form_ids as $form_id ) {
+				$form_id_escaped = esc_js( $form_id );
+				$container_id = "ect-gvform-turnstile-container-{$context_id}-{$form_id_escaped}";
+				
+				$render_script .= "
+					if (document.getElementById('{$container_id}') && !document.getElementById('{$container_id}').hasAttribute('data-rendered')) {
+						turnstile.render('#{$container_id}', {
+							sitekey: '{$site_key_escaped}',
+							callback: function(token) {
+								var forms = document.querySelectorAll('.gform_wrapper input[type=submit]');
+								forms.forEach(function(form){
+									form.style.pointerEvents = 'auto';
+									form.style.opacity = '1';
+								});
+								var footer = document.querySelectorAll('.gform_footer');
+								footer.forEach(function(foo){foo.style.display = 'block'});
+							}
 						});
-						var footer = document.querySelectorAll('.gform_footer');
-						footer.forEach(function(foo){foo.style.display = 'block'});
-					},
-				});";
+						document.getElementById('{$container_id}').setAttribute('data-rendered', 'true');
+					}";
 			}
-
-			$script .= '};';
-			wp_add_inline_script( 'ect-gvform-turnstile-challenges', $script, 'before' );
+			
+			$render_script .= '});';
+			
+			wp_add_inline_script( 'ect-gvform-turnstile-challenges', $render_script );
 			wp_enqueue_script( 'ect-gvform-turnstile-challenges' );
 		}
 	}
@@ -216,7 +275,7 @@ class GravityForm {
 		$response = wp_turnstile()->helpers->validate_turnstile( $token );
 
 		if ( ! ( isset( $response['success'] ) && wp_validate_boolean( $response['success'] ) )) {
-			$error_message = wp_turnstile()->settings->get( 'error_msg', __( 'Invalid Turnstile', 'wppool-turnstile' ) );
+			$error_message = wp_turnstile()->settings->get( 'error_msg', __( 'Invalid Turnstile', 'wppool-turnstile-captcha-spam-filter' ) );
 			$validation_message = esc_html( $error_message );
 
 			foreach ($form['fields'] as &$field) {

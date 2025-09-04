@@ -92,46 +92,104 @@ class WPUF {
 	 */
 	public function enqueue_scripts( $form_id )
 	{
-		wp_register_script(
-			'ect-wpuf-turnstile-challenges',
-			'//challenges.cloudflare.com/turnstile/v0/api.js?onload=ectWPUFTurnstileCb',
-			[],
-			wp_turnstile()->api_version,
-			true
-		);
+		// Only register and add the loader script once per page.
+		if ( ! wp_script_is( 'ect-wpuf-turnstile-challenges', 'registered' ) ) {
+			wp_register_script(
+				'ect-wpuf-turnstile-challenges',
+				false,
+				[],
+				wp_turnstile()->api_version,
+				true
+			);
+			
+			// Add the Turnstile loader script only once.
+			$loader_script = '(function() {
+				window.ectWPUFTurnstileLoader = window.ectWPUFTurnstileLoader || {
+					loaded: false,
+					callbacks: [],
+					
+					loadScript: function() {
+						if (this.loaded || window.turnstile) {
+							this.executeCallbacks();
+							return;
+						}
+						
+						var script = document.createElement("script");
+						script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+						script.async = true;
+						script.onload = () => {
+							this.loaded = true;
+							this.executeCallbacks();
+						};
+						document.head.appendChild(script);
+					},
+					
+					addCallback: function(callback) {
+						if (window.turnstile) {
+							callback();
+						} else {
+							this.callbacks.push(callback);
+							if (!this.loaded) this.loadScript();
+						}
+					},
+					
+					executeCallbacks: function() {
+						while (this.callbacks.length > 0) {
+							var callback = this.callbacks.shift();
+							callback();
+						}
+					}
+				};
+			})();';
+			
+			wp_add_inline_script( 'ect-wpuf-turnstile-challenges', $loader_script, 'before' );
+		}
 
 		$site_key = wp_turnstile()->settings->get( 'site_key' );
-
 		if ( $this->form_ids ) {
-			$script = 'window.ectWPUFTurnstileCb = function () {';
+			$context_id = esc_js( $this->turnstile_context_id );
+			$site_key_escaped = esc_js( $site_key );
+			
+			// Add form-specific rendering script.
+			$render_script = 'ectWPUFTurnstileLoader.addCallback(function() {';
+			
 			foreach ( $this->form_ids as $form_id ) {
-				$script .= "turnstile.render('#ect-turnstile-container-{$this->turnstile_context_id}-{$form_id}', {
-				sitekey: '" . esc_attr( $site_key ) . "',
-				callback: function(token) {
-					var form = document.querySelectorAll('.wpuf-login-form input[type=submit]');
-					var postForm = document.querySelectorAll('.wpuf-form-add .wpuf-submit-button');
-					if(form){
-						form.forEach(function(element) {
-						element.style.pointerEvents = 'auto';
-						element.style.opacity = '1';
-					});
-					}
-					if(postForm){
-						postForm.forEach(function(element) {
-						element.style.pointerEvents = 'auto';
-						element.style.opacity = '1';
+				$form_id_escaped = esc_js( $form_id );
+				$container_id = "ect-turnstile-container-{$context_id}-{$form_id_escaped}";
+				
+				$render_script .= "
+					if (document.getElementById('{$container_id}') && !document.getElementById('{$container_id}').hasAttribute('data-rendered')) {
+						turnstile.render('#{$container_id}', {
+							sitekey: '{$site_key_escaped}',
+							callback: function(token) {
+								var form = document.querySelectorAll('.wpuf-login-form input[type=submit]');
+								var postForm = document.querySelectorAll('.wpuf-form-add .wpuf-submit-button');
+								
+								if(form){
+									form.forEach(function(element) {
+										element.style.pointerEvents = 'auto';
+										element.style.opacity = '1';
+									});
+								}
+								
+								if(postForm){
+									postForm.forEach(function(element) {
+										element.style.pointerEvents = 'auto';
+										element.style.opacity = '1';
+									});
+								}
+							}
 						});
-					}
-				}
-			});";
+						document.getElementById('{$container_id}').setAttribute('data-rendered', 'true');
+					}";
 			}
-
-			$script .= '};';
-			wp_add_inline_script( 'ect-wpuf-turnstile-challenges', $script, 'before' );
+			
+			$render_script .= '});';
+			
+			wp_add_inline_script( 'ect-wpuf-turnstile-challenges', $render_script );
 			wp_enqueue_script( 'ect-wpuf-turnstile-challenges' );
 		}
 	}
-
 
 	/**
 	 * Verify wp user frontend form submit submissions.
@@ -142,12 +200,17 @@ class WPUF {
 	 */
 	public function verify()
 	{
-		$message = wp_turnstile()->settings->get( 'error_msg', __( 'Please verify you are human', 'wppool-turnstile' ) );
+		$message = wp_turnstile()->settings->get( 'error_msg', __( 'Please verify you are human', 'wppool-turnstile-captcha-spam-filter' ) );
+		
+		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['nonce'] ) ), 'turnstile_verify_nonce' ) ) {
+			wp_die( esc_html__( 'Security check failed', 'wppool-turnstile-captcha-spam-filter' ) );
+		}
+		
 		if ( ! isset( $_POST['cf-turnstile-response'] ) ) {
 			return;
 		}
 
-	$token = sanitize_text_field( $_POST['cf-turnstile-response'] ); // phpcs:ignore.
+		$token = sanitize_text_field( $_POST['cf-turnstile-response'] ); // phpcs:ignore.
 		$response = wp_turnstile()->helpers->validate_turnstile( $token );
 		if ( ! ( isset( $response['success'] ) && wp_validate_boolean( $response['success'] ) ) ) {
 			$error_code = $response['error-codes'][0] ?? null;

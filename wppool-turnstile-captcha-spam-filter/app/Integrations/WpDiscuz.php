@@ -80,42 +80,100 @@ class WpDiscuz {
 	 */
 	public function enqueue_scripts( $form_id )
 	{
-		wp_register_script(
-			'ect-wpdiscuz-turnstile-challenges',
-			'//challenges.cloudflare.com/turnstile/v0/api.js?onload=ectWpDiscuzTurnstileCb',
-			[],
-			wp_turnstile()->api_version,
-			true
-		);
+		// Only register and add the loader script once per page.
+		if ( ! wp_script_is( 'ect-wpdiscuz-turnstile-challenges', 'registered' ) ) {
+			wp_register_script(
+				'ect-wpdiscuz-turnstile-challenges',
+				false,
+				[],
+				wp_turnstile()->api_version,
+				true
+			);
+			
+			// Add the Turnstile loader script only once.
+			$loader_script = '(function() {
+				window.ectWpDiscuzTurnstileLoader = window.ectWpDiscuzTurnstileLoader || {
+					loaded: false,
+					callbacks: [],
+					
+					loadScript: function() {
+						if (this.loaded || window.turnstile) {
+							this.executeCallbacks();
+							return;
+						}
+						
+						var script = document.createElement("script");
+						script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+						script.async = true;
+						script.onload = () => {
+							this.loaded = true;
+							this.executeCallbacks();
+						};
+						document.head.appendChild(script);
+					},
+					
+					addCallback: function(callback) {
+						if (window.turnstile) {
+							callback();
+						} else {
+							this.callbacks.push(callback);
+							if (!this.loaded) this.loadScript();
+						}
+					},
+					
+					executeCallbacks: function() {
+						while (this.callbacks.length > 0) {
+							var callback = this.callbacks.shift();
+							callback();
+						}
+					}
+				};
+			})();';
+			
+			wp_add_inline_script( 'ect-wpdiscuz-turnstile-challenges', $loader_script, 'before' );
+		}
 
 		$site_key = wp_turnstile()->settings->get( 'site_key' );
 		if ( $this->form_ids ) {
-			$script = 'window.ectWpDiscuzTurnstileCb = function () { ';
+			$context_id = esc_js( $this->turnstile_context_id );
+			$site_key_escaped = esc_js( $site_key );
+			
+			// Add form-specific rendering script.
+			$render_script = 'ectWpDiscuzTurnstileLoader.addCallback(function() {';
+			
 			foreach ( $this->form_ids as $form_id ) {
-				$script .= "turnstile.render('#ect-wpdiscuz-turnstile-container-{$this->turnstile_context_id}-{$form_id}', {
-				sitekey: '" . esc_attr( $site_key ) . "',
-				callback: function(token) {
-					var submitBtn = document.querySelectorAll('.wpd-main-form-wrapper input[type=submit]');
-					if(submitBtn){
-					submitBtn.forEach(function(submit){
-						submit.style.pointerEvents = 'auto';
-						submit.style.opacity = '1';
-					});
-				}
+				$form_id_escaped = esc_js( $form_id );
+				$container_id = "ect-wpdiscuz-turnstile-container-{$context_id}-{$form_id_escaped}";
+				
+				$render_script .= "
+					if (document.getElementById('{$container_id}') && !document.getElementById('{$container_id}').hasAttribute('data-rendered')) {
+						turnstile.render('#{$container_id}', {
+							sitekey: '{$site_key_escaped}',
+							callback: function(token) {
+								var submitBtn = document.querySelectorAll('.wpd-main-form-wrapper input[type=submit]');
+								if(submitBtn){
+									submitBtn.forEach(function(submit){
+										submit.style.pointerEvents = 'auto';
+										submit.style.opacity = '1';
+									});
+								}
 
-					var commSubmit = document.querySelectorAll('.wpd-secondary-form-wrapper input[type=submit]');
-					if(commSubmit){
-					commSubmit.forEach(function(submit){
-						submit.style.pointerEvents = 'auto';
-						submit.style.opacity = '1';
-					});
-				}					
-				}
-		});";
+								var commSubmit = document.querySelectorAll('.wpd-secondary-form-wrapper input[type=submit]');
+								if(commSubmit){
+									commSubmit.forEach(function(submit){
+										submit.style.pointerEvents = 'auto';
+										submit.style.opacity = '1';
+									});
+								}
+							}
+						});
+						document.getElementById('{$container_id}').setAttribute('data-rendered', 'true');
+					}";
 			}
-			$script .= '};';
-
-			wp_add_inline_script( 'ect-wpdiscuz-turnstile-challenges', $script, 'before' );
+			
+			$render_script .= '});';
+			
+			wp_add_inline_script( 'ect-wpdiscuz-turnstile-challenges', $render_script );
 			wp_enqueue_script( 'ect-wpdiscuz-turnstile-challenges' );
 		}
 	}
@@ -218,7 +276,7 @@ class WpDiscuz {
 	 * @return void
 	 */
 	public function verify($new_comment, $currentUser)     { // phpcs:ignore
-		$message = wp_turnstile()->settings->get( 'error_msg', __( 'Please verify you are human', 'wppool-turnstile' ) );
+		$message = wp_turnstile()->settings->get( 'error_msg', __( 'Please verify you are human', 'wppool-turnstile-captcha-spam-filter' ) );
 
         if ('POST' === $_SERVER['REQUEST_METHOD'] && !empty($_POST['cf-turnstile-response'])) { // phpcs:ignore
             $token    = sanitize_text_field($_POST['cf-turnstile-response']); // phpcs:ignore
