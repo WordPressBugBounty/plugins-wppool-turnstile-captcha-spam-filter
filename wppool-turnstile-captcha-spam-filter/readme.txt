@@ -12,7 +12,7 @@ Add Cloudflare Turnstile to WordPress, Contact Form 7, WooCommerce, WPForms, Bud
 
 == Description == 
 
-Cloudflare Turnstile for WordPress, WooCommerce, Contact Form 7, BuddyPress, WPForms, and more. Secure your WordPress website with the best reCAPTCHA alternative for WordPress.
+Cloudflare Turnstile for WordPress, WooCommerce, Contact Form 7, BuddyPress, WPForms, and more. Secure your website with a privacy-friendly reCAPTCHA alternative.
 
 **"Studies show that 15% of users will abandon a web-based service when they face a traditional CAPTCHA test."**
 
