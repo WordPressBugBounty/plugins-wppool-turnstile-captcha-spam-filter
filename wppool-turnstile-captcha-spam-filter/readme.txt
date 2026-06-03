@@ -2,9 +2,9 @@
 Contributors: wppool, mahfuz01, azizultex, wpdarkmode, devsajjad, farhanmullick, shahreyar46
 Tags: turnstile, captcha, anti-spam, recaptcha, cloudflare
 Requires at least: 5.4
-Tested up to: 6.8
+Tested up to: 7.0
 Requires PHP: 5.6
-Stable tag: 2.3.11
+Stable tag: 2.3.12
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Add Cloudflare Turnstile to WordPress, Contact Form 7, WooCommerce, WPForms, Bud
 
 == Description == 
 
-Cloudflare Turnstile for WordPress, WooCommerce, Contact Form 7, BuddyPress, WPForms, and more. Secure your website with a privacy-friendly reCAPTCHA alternative.
+Cloudflare Turnstile for WordPress, WooCommerce, Contact Form 7, BuddyPress, WPForms, and more. Secure your WordPress website with the best reCAPTCHA alternative for WordPress.
 
 **"Studies show that 15% of users will abandon a web-based service when they face a traditional CAPTCHA test."**
 
@@ -118,6 +118,9 @@ For instant support, please reach us through [WordPress Support Forum]((https://
 
 
 == Changelog ==
+
+= 2.3.12 – 04 Jun 2026 =
+* **Enhancement:** Enhanced compatibility to support WordPress 7.0
 
 = 2.3.11 – 04 Sept 2025 =
 * **Improvement:** Enhanced compatibility and maintenance update

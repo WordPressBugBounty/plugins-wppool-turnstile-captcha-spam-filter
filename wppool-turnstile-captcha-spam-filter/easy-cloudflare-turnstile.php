@@ -3,7 +3,7 @@
  * Plugin Name:       Easy Spam Filter
  * Plugin URI:        https://wppool.dev/spam-filter-with-turnstile-captcha
  * Description:       Easy Spam Filter for WordPress, WooCommerce, Contact Form 7, BuddyPress, and more.
- * Version:           2.3.11
+ * Version:           2.3.12
  * Requires at least: 5.4
  * Requires PHP:      5.6
  * Author:            WPPOOL
@@ -11,7 +11,7 @@
  * Text Domain:       wppool-turnstile-captcha-spam-filter
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
- * Tested up to:      6.8
+ * Tested up to:      7.0
  *
  * @package EasyCloudflareTurnstile
  */
